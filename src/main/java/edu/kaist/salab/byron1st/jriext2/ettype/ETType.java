@@ -1,19 +1,30 @@
 package edu.kaist.salab.byron1st.jriext2.ettype;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by byron1st on 2017. 6. 20..
  */
 public class ETType {
+    private String typeName;
     private String className;
-    private String methodSignature;
-    private HashMap<String, ETTAttribute> attributes = new HashMap<>();
+    private String methodName;
+    private String methodDesc;
+    private boolean isEnter;
+    private ArrayList<ETTAttribute> attributeList = new ArrayList<>();
 
-    public ETType(String className, String methodSignature, HashMap<String, ETTAttribute> attributes) {
+    public ETType(String typeName, String className, String methodName, String methodDesc, boolean isEnter, ArrayList<ETTAttribute> attributeList) {
+        this.typeName = typeName;
         this.className = className;
-        this.methodSignature = methodSignature;
-        this.attributes = attributes;
+        this.methodName = methodName;
+        this.methodDesc = methodDesc;
+        this.isEnter = isEnter;
+        this.attributeList = attributeList;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
     public String getClassName() {
@@ -21,10 +32,22 @@ public class ETType {
     }
 
     public String getMethodSignature() {
-        return methodSignature;
+        return methodName + '/' + methodDesc;
     }
 
-    public HashMap<String, ETTAttribute> getAttributes() {
-        return attributes;
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public String getMethodDesc() {
+        return methodDesc;
+    }
+
+    public ArrayList<ETTAttribute> getAttributeList() {
+        return attributeList;
+    }
+
+    public boolean isEnter() {
+        return isEnter;
     }
 }
