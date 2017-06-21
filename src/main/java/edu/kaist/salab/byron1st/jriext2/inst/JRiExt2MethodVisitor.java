@@ -22,6 +22,8 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
 
     @Override
     protected void onMethodEnter() {
+        // Native 또는 Abstract 메소드가 아니고,
+        // 메소드 도입부에서 로깅해야 할 경우
         if(isFeasible(methodAccess) && ettype.isEnter()) {
             insertLoggingCode();
         }
@@ -29,6 +31,8 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
 
     @Override
     protected void onMethodExit(int opcode) {
+        // Native 또는 Abstract 메소드가 아니고,
+        // 메소드 마지막에 로깅해야 할 경우
         if(isFeasible(methodAccess) && !ettype.isEnter()) {
             insertLoggingCode();
         }
@@ -36,14 +40,19 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
     }
 
     private void insertLoggingCode() {
+        // 대상 객체의 null 여부 체크.
         Label ifSystemOutNull = new Label();
         mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitJumpInsn(IFNULL, ifSystemOutNull);
+
+        // 메타 정보 (메소드 도입부 기록 여부, Execution trace type 이름, 실행 시간, 객체 hash code 값) 기록
         logBeginPrint();
-
-        if(ettype.isEnter()) logStringValue(ENTER);
-        else logStringValue(EXIT);
-
+        if(ettype.isEnter()) {
+            logStringValue(ENTER);
+        } else {
+            logStringValue(EXIT);
+        }
+        logDelimiter();
         logStringValue(ettype.getTypeName());
         logDelimiter();
         log(getExecutionTime, true);
@@ -51,6 +60,7 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         logObjectId();
         logEndPrint();
 
+        // 추가 정보 (Attribute) 기록
         for (ETTAttribute ettattribute : ettype.getAttributeList()) {
             if(ettattribute instanceof ETTAttributeMethod) logMethod((ETTAttributeMethod) ettattribute);
             else if (ettattribute instanceof ETTAttributeField) logField((ETTAttributeField) ettattribute);
@@ -172,6 +182,12 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
     }
 
+    /**
+     * 해당 메소드가 Native 메소드이거나 Abstract 메소드인지 확인한다.
+     * 해당 될 경우, false, 그렇지 않으면 true를 출력한다.
+     * @param access 메소드의 접근 정보. ASM5 Opcodes 값이다.
+     * @return Native 메소드이거나 Abstract 메소드인지 확인한 boolean 값.
+     */
     private boolean isFeasible(int access) {
         return !((access & ACC_NATIVE) != 0)
                 || ((access & ACC_ABSTRACT) != 0);

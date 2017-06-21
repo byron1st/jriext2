@@ -15,7 +15,6 @@ class JRiExt2ClassVisitor extends ClassVisitor implements Opcodes{
     JRiExt2ClassVisitor(ClassVisitor cv, ETType ettype) {
         super(ASM5, cv);
         this.ettype = ettype;
-        this.isDebugMode = isDebugMode;
     }
 
     @Override
