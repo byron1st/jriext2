@@ -9,7 +9,7 @@ public class ETTAttributeMethod extends ETTAttribute {
     private String returnType;
     private boolean isVirtual;
 
-    public ETTAttributeMethod(boolean isVirtual, String attributeName, String className, String methodNameDesc) {
+    public ETTAttributeMethod(String attributeName, boolean isVirtual, String className, String methodNameDesc) {
         super(attributeName, className);
 
         this.isVirtual = isVirtual;

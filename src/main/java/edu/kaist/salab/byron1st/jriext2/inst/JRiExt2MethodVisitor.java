@@ -6,13 +6,12 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 /**
  * Created by byron1st on 2016. 1. 8..
  */
 class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
-    private static ETTAttributeMethod getExecutionTime = new ETTAttributeMethod(false, "time", "java/lang/System", "nanoTime()J");
+    private static ETTAttributeMethod getExecutionTime = new ETTAttributeMethod("time", false, "java/lang/System", "nanoTime()J");
 
     private ETType ettype;
 
