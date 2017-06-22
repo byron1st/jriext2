@@ -34,16 +34,44 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         // Native 또는 Abstract 메소드가 아니고,
         // 메소드 마지막에 로깅해야 할 경우
         if(isFeasible(methodAccess) && !ettype.isEnter()) {
-            insertLoggingCode();
+            if (ettype.getAttributeList().get(0) instanceof ETTAttributeReturn) {
+                insertLoggingCodeReturnType();
+            } else {
+                insertLoggingCode();
+            }
         }
         mv.visitEnd();
     }
 
     private void insertLoggingCode() {
-        // 대상 객체의 null 여부 체크.
-        Label ifSystemOutNull = new Label();
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitJumpInsn(IFNULL, ifSystemOutNull);
+        // 메타 정보 (메소드 도입부 기록 여부, Execution trace type 이름, 실행 시간, 객체 hash code 값) 기록
+        logBeginPrint();
+        if(ettype.isEnter()) {
+            logStringValue(ENTER);
+        } else {
+            logStringValue(EXIT);
+        }
+        logDelimiter();
+        logStringValue(ettype.getTypeName());
+        logDelimiter();
+        log(getExecutionTime, true);
+        logDelimiter();
+        logObjectId();
+
+        // 추가 정보 (Attribute) 기록
+        for (ETTAttribute ettattribute : ettype.getAttributeList()) {
+            if(ettattribute instanceof ETTAttributeMethod) logMethod((ETTAttributeMethod) ettattribute);
+            else if (ettattribute instanceof ETTAttributeField) logField((ETTAttributeField) ettattribute);
+            else if (ettattribute instanceof ETTAttributeParameter) logParameter((ETTAttributeParameter) ettattribute);
+        }
+
+        logEndPrint();
+        mv.visitMethodInsn(INVOKESTATIC, "edu/kaist/salab/byro1nst/jriext2/loggingtoolset/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
+    }
+
+    private void insertLoggingCodeReturnType() {
+        // StringBuilder 객체를 생성하기 전에, Return 하려고 준비하던 값을 일단 1번 위치에 저장.
+        mv.visitVarInsn(ASTORE, 1);
 
         // 메타 정보 (메소드 도입부 기록 여부, Execution trace type 이름, 실행 시간, 객체 hash code 값) 기록
         logBeginPrint();
@@ -58,48 +86,57 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         log(getExecutionTime, true);
         logDelimiter();
         logObjectId();
-        logEndPrint();
 
         // 추가 정보 (Attribute) 기록
+        // Return type은 반드시 Return type ETTAttribute만 가져야 함.
         for (ETTAttribute ettattribute : ettype.getAttributeList()) {
-            if(ettattribute instanceof ETTAttributeMethod) logMethod((ETTAttributeMethod) ettattribute);
-            else if (ettattribute instanceof ETTAttributeField) logField((ETTAttributeField) ettattribute);
-            else if (ettattribute instanceof ETTAttributeParameter) logParameter((ETTAttributeParameter) ettattribute);
-            else if (ettattribute instanceof ETTAttributeReturn) logReturn((ETTAttributeReturn) ettattribute);
+            logReturn((ETTAttributeReturn) ettattribute);
         }
 
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "()V", false);
-        mv.visitLabel(ifSystemOutNull);
+        logEndPrint();
+        mv.visitMethodInsn(INVOKESTATIC, "edu/kaist/salab/byro1nst/jriext2/loggingtoolset/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
+
+        // 기록 작업이 모두 끝나고, 앞서 저장했던 값을 로드하여 Return 준비.
+        mv.visitVarInsn(ALOAD, 1);
     }
 
     private void logMethod(ETTAttributeMethod ettattribute) {
-        logBeginPrint();
         logDelimiter();
         log(ettattribute, true);
-        logEndPrint();
     }
 
     private void logField(ETTAttributeField ettattribute) {
         Label ifFieldNull = new Label();
         Label endLabel = new Label();
+
+        // ALOAD 0은 this를 호출.
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, ettype.getClassName(), ettattribute.getFieldName(), ettattribute.getClassName());
+
+        // field가 null인지 체크.
         mv.visitJumpInsn(IFNULL, ifFieldNull);
-        logBeginPrint();
+
         logDelimiter();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, ettype.getClassName(), ettattribute.getFieldName(), ettattribute.getClassName());
 
-        if(ettattribute.getNextMethod() != null) log(ettattribute.getNextMethod(), false);
-        else mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(" + ettattribute.getClassName() + ")Ljava/lang/StringBuilder;", false);
+        if(ettattribute.getNextMethod() != null) {
+            // primitive type이 아닐 경우, 반드시 method chain이 있어야 함.
+            log(ettattribute.getNextMethod(), false);
+        } else {
+            // primitive type 이면 바로 기록.
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(" + ettattribute.getClassName() + ")Ljava/lang/StringBuilder;", false);
+        }
 
-        logEndPrint();
+        // null이 아닐 경우 기록이 종료되었으므로, endLabel로 jump.
         mv.visitJumpInsn(GOTO, endLabel);
+
+        // field가 null일 경우 여기로 jump.
         mv.visitLabel(ifFieldNull);
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitLdcInsn(DDELIM + "null");
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
+        logStringValue(DDELIM + "null");
+
+        // field가 null이 아닐 경우,
+        // 여기로 바로 jump 시켜서 null일 경우 하는 작업을 회피.
         mv.visitLabel(endLabel);
     }
 
@@ -110,23 +147,17 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         int off = 1;
         if(isStatic()) off = 0;
 
-        logBeginPrint();
         logDelimiter();
         mv.visitVarInsn(opcode, off + ith);
         if(ettattribute.getNextMethod() != null) log(ettattribute.getNextMethod(), false);
         else mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(" + ettattribute.getClassName() + ")Ljava/lang/StringBuilder;", false);
-        logEndPrint();
     }
 
     private void logReturn(ETTAttributeReturn ettattribute) {
-        mv.visitVarInsn(ASTORE, 1);
-        logBeginPrint();
         logDelimiter();
         mv.visitVarInsn(ALOAD, 1);
         if(ettattribute.getNextMethod() != null) log(ettattribute.getNextMethod(), false);
         else mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(" + ettattribute.getClassName() + ")Ljava/lang/StringBuilder;", false);
-        logEndPrint();
-        mv.visitVarInsn(ALOAD, 1);
     }
 
     /************ System.out.print를 시작해 놓고 쓰는 log들 ************/
@@ -157,8 +188,9 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
     }
 
     private void logObjectId() {
-        if(isStatic()) logStringValue(STATIC + ettype.getClassName() + ">");
-        else {
+        if(isStatic()) {
+            logStringValue(STATIC + ettype.getClassName() + ">");
+        } else {
             mv.visitVarInsn(ALOAD, 0);
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "hashCode", "()I", false);
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(I)Ljava/lang/StringBuilder;", false);
@@ -170,8 +202,9 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
     }
 
+    /************ System.out.print를 시작 ************/
+
     private void logBeginPrint() {
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
         mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
@@ -179,7 +212,6 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
 
     private void logEndPrint() {
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
     }
 
     /**
