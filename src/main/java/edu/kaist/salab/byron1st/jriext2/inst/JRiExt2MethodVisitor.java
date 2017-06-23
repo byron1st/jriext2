@@ -8,7 +8,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AdviceAdapter;
 
 /**
- * Created by byron1st on 2016. 1. 8..
+ * Created by util on 2016. 1. 8..
  */
 class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
     private static ETTAttributeMethod getExecutionTime = new ETTAttributeMethod("time", false, "java/lang/System", "nanoTime()J");
@@ -66,7 +66,7 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         }
 
         logEndPrint();
-        mv.visitMethodInsn(INVOKESTATIC, "edu/kaist/salab/byro1nst/jriext2/loggingtoolset/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, "java/util/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
     }
 
     private void insertLoggingCodeReturnType() {
@@ -94,7 +94,7 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         }
 
         logEndPrint();
-        mv.visitMethodInsn(INVOKESTATIC, "edu/kaist/salab/byro1nst/jriext2/loggingtoolset/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, "java/util/JRiExtLogger", "recordExecutionTrace", "(Ljava/lang/String;)V", false);
 
         // 기록 작업이 모두 끝나고, 앞서 저장했던 값을 로드하여 Return 준비.
         mv.visitVarInsn(ALOAD, 1);

@@ -1,7 +1,7 @@
 package edu.kaist.salab.byron1st.jriext2.ettype;
 
 /**
- * Created by byron1st on 2017. 6. 20..
+ * Created by util on 2017. 6. 20..
  */
 public class ETTAttribute {
     protected String attributeName;

@@ -14,15 +14,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Created by byron1st on 2017. 6. 20..
+ * Created by util on 2017. 6. 20..
  */
-public class InstApp {
+public class InstApp implements Symbols {
     public static InstApp getInstance() {
         return instApp;
     }
 
-    private static final String DEFAULT_DIR_NAME = System.getProperty("user.dir") + File.separator + "jriext_userdata";
-    private static final Path CACHE_ROOT = Paths.get(DEFAULT_DIR_NAME + File.separator + "cache");
     private static InstApp instApp = new InstApp();
 
     private static void deleteCacheFolderIfExists() {
@@ -65,7 +63,7 @@ public class InstApp {
      * @throws WritingInstrumentedClassFailedException Instrumented 된 클래스를 캐시 폴더에 쓰는데 실패함
      * @throws CopyingNotInstClassesFailedException targetClassPath의 클래스 파일들을 캐시 폴더로 복사하는데 실패함
      */
-    public void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, WritingInstrumentedClassFailedException, CopyingNotInstClassesFailedException {
+    public void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, WritingInstrumentedClassFailedException, CopyingNotInstClassesFailedException, CopyJRiExtLoggerClassFileFailedException {
         // Instrument가 먼저 진행되기 때문에,
         // instrument 된 클래스는 이미 캐시 폴더에 print 되어 있다.
         // 이때, targetClassPath의 클래스들을 그대로 복사하면
@@ -96,6 +94,12 @@ public class InstApp {
             } catch (IOException e) {
                 throw new WritingInstrumentedClassFailedException("Writing the instrumented class to the cache directory has been failed.", e);
             }
+        }
+
+        try {
+            copyClassFile(JRIEXTLOGGER_PATH);
+        } catch (IOException e) {
+            throw new CopyJRiExtLoggerClassFileFailedException("Copying JRiExtLogger class file has been failed.", e);
         }
 
         // targetClassPath에 있는 클래스 파일들 중,

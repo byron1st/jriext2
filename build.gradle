@@ -1,4 +1,4 @@
-group 'edu.kaist.salab.byron1st'
+group 'edu.kaist.salab.util'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'

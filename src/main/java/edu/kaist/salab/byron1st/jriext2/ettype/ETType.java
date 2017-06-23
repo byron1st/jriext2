@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by byron1st on 2017. 6. 20..
+ * Created by util on 2017. 6. 20..
  */
 public class ETType {
     private String typeName;

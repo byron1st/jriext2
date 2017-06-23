@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 /**
- * Created by byron1st on 2017. 6. 21..
+ * Created by util on 2017. 6. 21..
  */
 public class InstAppTest {
     private ETType threadETType;
@@ -24,7 +24,7 @@ public class InstAppTest {
     @Test
     public void instrument() throws Exception, CopyingNotInstClassesFailedException {
         InstApp app = InstApp.getInstance();
-        Path targetClassPath = Paths.get("/Users/byron1st/Downloads");
+        Path targetClassPath = Paths.get("/Users/util/Downloads");
         ArrayList<ETType> ettypeList = new ArrayList<>();
         ettypeList.add(getThreadETType());
         ettypeList.add(getSocketETType());

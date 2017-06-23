@@ -1,16 +1,10 @@
-package edu.kaist.salab.byron1st.jriext2.loggingtoolset;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.util.ArrayList;
+package java.util;
 
 /**
- * Created by byron1st on 2017. 6. 22..
+ * Created by util on 2017. 6. 22..
  */
 public class JRiExtLogger {
-    static JRiExtLogger logger;
+    static JRiExtLogger logger = new JRiExtLogger();
 
     public static void recordExecutionTrace(String executionTrace) {
         if(logger == null) {
@@ -32,6 +26,8 @@ public class JRiExtLogger {
     }
 
     private void send(String executionTrace) {
-        System.out.println(executionTrace);
+        if(System.out != null) {
+            System.out.println(executionTrace);
+        }
     }
 }

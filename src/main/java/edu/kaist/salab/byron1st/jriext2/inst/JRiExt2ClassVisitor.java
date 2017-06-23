@@ -6,7 +6,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Created by byron1st on 2016. 1. 8..
+ * Created by util on 2016. 1. 8..
  */
 class JRiExt2ClassVisitor extends ClassVisitor implements Opcodes{
     private ETType ettype;
