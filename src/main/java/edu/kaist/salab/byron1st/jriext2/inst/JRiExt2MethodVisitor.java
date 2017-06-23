@@ -34,7 +34,7 @@ class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
         // Native 또는 Abstract 메소드가 아니고,
         // 메소드 마지막에 로깅해야 할 경우
         if(isFeasible(methodAccess) && !ettype.isEnter()) {
-            if (ettype.getAttributeList().get(0) instanceof ETTAttributeReturn) {
+            if (ettype.getAttributeList().size() != 0 && ettype.getAttributeList().get(0) instanceof ETTAttributeReturn) {
                 insertLoggingCodeReturnType();
             } else {
                 insertLoggingCode();

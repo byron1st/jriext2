@@ -19,7 +19,7 @@ public class TestApp {
         Path targetClassPath = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/bin");
 
         ArrayList<ETType> ettypeList = new ArrayList<>();
-//        ettypeList.add(getThreadETType());
+        ettypeList.add(getThreadETType());
         ettypeList.add(getPipedStreamETType());
         try {
             InstApp.getInstance().instrument(targetClassPath, ettypeList);
@@ -36,9 +36,10 @@ public class TestApp {
 
     // Test field type with method chains and parameter type.
     public static ETType getThreadETType() {
+        ETTAttributeMethod getClass = new ETTAttributeMethod("get-class", true, "java/lang/Object", "getClass()Ljava/lang/Class;");
+        getClass.setNextMethod(new ETTAttributeMethod("get-class-name", true, "java/lang/Class", "getName()Ljava/lang/String;"));
         ETTAttributeField targetClass = new ETTAttributeField("target-class", "target", "Ljava/lang/Runnable;");
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class", true, "java/lang/Object", "getClass()Ljava/lang/Class;"));
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class-name", true, "java/lang/Class", "getName()Ljava/lang/String;"));
+        targetClass.setNextMethod(getClass);
 
         ETTAttributeField targetObjectId = new ETTAttributeField("target-objectId", "target", "Ljava/lang/Runnable;");
         targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", true, "java/lang/Object", "hashCode()I"));
