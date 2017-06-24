@@ -4,12 +4,9 @@ import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by util on 2017. 6. 21..
@@ -22,7 +19,7 @@ public class InstAppTest {
     }
 
     @Test
-    public void instrument() throws Exception, CopyingNotInstClassesFailedException {
+    public void instrument() throws Exception, NotInstClassesCopyFailedException {
         InstApp app = InstApp.getInstance();
         Path targetClassPath = Paths.get("/Users/util/Downloads");
         ArrayList<ETType> ettypeList = new ArrayList<>();

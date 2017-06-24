@@ -5,17 +5,15 @@ import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
 import edu.kaist.salab.byron1st.jriext2.inst.*;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.*;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by util on 2017. 6. 22..
  */
 
 public class Endpoint implements Symbols {
-    public static void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, CopyingNotInstClassesFailedException, WritingInstrumentedClassFailedException, CopyJRiExtLoggerClassFileFailedException {
+    public static void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, NotInstClassesCopyFailedException, InstrumentedClassWriteFailedException, JRiExtLoggerClassFileCopyFailedException {
         InstApp.getInstance().instrument(targetClassPath, ettypeList);
     }
 

@@ -61,10 +61,10 @@ public class InstApp implements Symbols {
      * @param targetClassPath 재구축 대상 시스템의 class path
      * @param ettypeList instrument 대상을 정의한 execution trace type 리스트
      * @throws ClassReaderNotConstructedException ClassReader를 생성하는데 실패함
-     * @throws WritingInstrumentedClassFailedException Instrumented 된 클래스를 캐시 폴더에 쓰는데 실패함
-     * @throws CopyingNotInstClassesFailedException targetClassPath의 클래스 파일들을 캐시 폴더로 복사하는데 실패함
+     * @throws InstrumentedClassWriteFailedException Instrumented 된 클래스를 캐시 폴더에 쓰는데 실패함
+     * @throws NotInstClassesCopyFailedException targetClassPath의 클래스 파일들을 캐시 폴더로 복사하는데 실패함
      */
-    public void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, WritingInstrumentedClassFailedException, CopyingNotInstClassesFailedException, CopyJRiExtLoggerClassFileFailedException {
+    public void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, InstrumentedClassWriteFailedException, NotInstClassesCopyFailedException, JRiExtLoggerClassFileCopyFailedException {
         // Instrument가 먼저 진행되기 때문에,
         // instrument 된 클래스는 이미 캐시 폴더에 print 되어 있다.
         // 이때, targetClassPath의 클래스들을 그대로 복사하면
@@ -93,14 +93,14 @@ public class InstApp implements Symbols {
             try {
                 printClass(ettype.getClassName(), classWriter);
             } catch (IOException e) {
-                throw new WritingInstrumentedClassFailedException("Writing the instrumented class to the cache directory has been failed.", e);
+                throw new InstrumentedClassWriteFailedException("Writing the instrumented class to the cache directory has been failed.", e);
             }
         }
 
         try {
             copyClassFile(JRIEXTLOGGER_PATH);
         } catch (IOException e) {
-            throw new CopyJRiExtLoggerClassFileFailedException("Copying JRiExtLogger class file has been failed.", e);
+            throw new JRiExtLoggerClassFileCopyFailedException("Copying JRiExtLogger class file has been failed.", e);
         }
 
         // targetClassPath에 있는 클래스 파일들 중,
@@ -108,7 +108,7 @@ public class InstApp implements Symbols {
         try {
             copyNotInstrumentedClassesToCacheDir(targetClassPath, isAlreadyCopied);
         } catch (IOException e) {
-            throw new CopyingNotInstClassesFailedException("Copying classes that are not instrumented is failed.", e);
+            throw new NotInstClassesCopyFailedException("Copying classes that are not instrumented is failed.", e);
         }
     }
 

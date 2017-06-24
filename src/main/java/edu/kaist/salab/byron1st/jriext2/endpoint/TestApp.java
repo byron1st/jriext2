@@ -2,9 +2,9 @@ package edu.kaist.salab.byron1st.jriext2.endpoint;
 
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import edu.kaist.salab.byron1st.jriext2.inst.ClassReaderNotConstructedException;
-import edu.kaist.salab.byron1st.jriext2.inst.CopyJRiExtLoggerClassFileFailedException;
-import edu.kaist.salab.byron1st.jriext2.inst.CopyingNotInstClassesFailedException;
-import edu.kaist.salab.byron1st.jriext2.inst.WritingInstrumentedClassFailedException;
+import edu.kaist.salab.byron1st.jriext2.inst.JRiExtLoggerClassFileCopyFailedException;
+import edu.kaist.salab.byron1st.jriext2.inst.NotInstClassesCopyFailedException;
+import edu.kaist.salab.byron1st.jriext2.inst.InstrumentedClassWriteFailedException;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.LogFilesCreationFailedException;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.RequiredFilesNotExistException;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.TargetSystemExecutionFailedException;
@@ -28,7 +28,7 @@ public class TestApp {
 
         try {
             Endpoint.instrument(targetClassPath, ettypeList);
-        } catch (WritingInstrumentedClassFailedException | CopyingNotInstClassesFailedException | CopyJRiExtLoggerClassFileFailedException e) {
+        } catch (InstrumentedClassWriteFailedException | NotInstClassesCopyFailedException | JRiExtLoggerClassFileCopyFailedException e) {
             e.printStackTrace();
         }
 
