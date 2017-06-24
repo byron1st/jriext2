@@ -1,8 +1,11 @@
 package edu.kaist.salab.byron1st.jriext2.endpoint;
 
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
-import edu.kaist.salab.byron1st.jriext2.inst.*;
-import edu.kaist.salab.byron1st.jriext2.loggingtoolset.ExecuterApp;
+import edu.kaist.salab.byron1st.jriext2.inst.ClassReaderNotConstructedException;
+import edu.kaist.salab.byron1st.jriext2.inst.CopyJRiExtLoggerClassFileFailedException;
+import edu.kaist.salab.byron1st.jriext2.inst.CopyingNotInstClassesFailedException;
+import edu.kaist.salab.byron1st.jriext2.inst.WritingInstrumentedClassFailedException;
+import edu.kaist.salab.byron1st.jriext2.loggingtoolset.LogFilesCreationFailedException;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.RequiredFilesNotExistException;
 import edu.kaist.salab.byron1st.jriext2.loggingtoolset.TargetSystemExecutionFailedException;
 
@@ -20,15 +23,18 @@ public class TestApp {
         ArrayList<ETType> ettypeList = new ArrayList<>();
         ettypeList.add(getThreadETType());
         ettypeList.add(getPipedStreamETType());
+
+        String mainClassName = "framework/PFSystemMain";
+
         try {
-            InstApp.getInstance().instrument(targetClassPath, ettypeList);
+            Endpoint.instrument(targetClassPath, ettypeList);
         } catch (WritingInstrumentedClassFailedException | CopyingNotInstClassesFailedException | CopyJRiExtLoggerClassFileFailedException e) {
             e.printStackTrace();
         }
 
         try {
-            int index = ExecuterApp.getInstance().execute("framework/PFSystemMain", null, null);
-        } catch (RequiredFilesNotExistException | TargetSystemExecutionFailedException e) {
+            int index = Endpoint.execute(mainClassName, null, null);
+        } catch (RequiredFilesNotExistException | TargetSystemExecutionFailedException | LogFilesCreationFailedException e) {
             e.printStackTrace();
         }
     }

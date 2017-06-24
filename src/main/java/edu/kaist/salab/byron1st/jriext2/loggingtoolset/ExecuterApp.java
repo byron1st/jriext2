@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +22,7 @@ public class ExecuterApp implements Symbols {
     private Path DEFAULT_ERROR_FILE = CACHE_ROOT.resolve("error.txt");
     private Path DEFAULT_OUTPUT_FILE = CACHE_ROOT.resolve("output.txt");
 
-    public int execute(String mainClassName, String outputFilePathString, String errorFilePathString) throws RequiredFilesNotExistException, TargetSystemExecutionFailedException {
+    public int execute(String mainClassName, Path outputFilePath, Path errorFilePath) throws RequiredFilesNotExistException, TargetSystemExecutionFailedException, LogFilesCreationFailedException {
         if(!Files.exists(CACHE_ROOT)) {
             throw new RequiredFilesNotExistException("Cache directory does not exist.");
         }
@@ -37,13 +36,13 @@ public class ExecuterApp implements Symbols {
                 mainClassName.replaceAll("/", "."));
         processBuilder.directory(CACHE_ROOT.toFile());
         try {
-            File outputLogFile = getLogFile(outputFilePathString, DEFAULT_OUTPUT_FILE);
-            File errorLogFile = getLogFile(errorFilePathString, DEFAULT_ERROR_FILE);
+            File outputLogFile = getLogFile(outputFilePath, DEFAULT_OUTPUT_FILE);
+            File errorLogFile = getLogFile(errorFilePath, DEFAULT_ERROR_FILE);
 
             processBuilder.redirectOutput(outputLogFile);
             processBuilder.redirectError(errorLogFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new LogFilesCreationFailedException("Creating log files has been failed.", e);
         }
 
         try {
@@ -62,13 +61,13 @@ public class ExecuterApp implements Symbols {
     private ExecuterApp() {
     }
 
-    private File getLogFile(String filePathString, Path defaultPath) throws IOException {
+    private File getLogFile(Path filePath, Path defaultPath) throws IOException {
         File logFile;
 
-        if (filePathString == null) {
+        if (filePath == null) {
             logFile = Files.createFile(defaultPath).toFile();
         } else {
-            logFile = Files.createFile(Paths.get(filePathString)).toFile();
+            logFile = Files.createFile(filePath).toFile();
         }
 
         return logFile;
