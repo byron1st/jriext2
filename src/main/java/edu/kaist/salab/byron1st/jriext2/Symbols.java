@@ -21,4 +21,8 @@ public interface Symbols {
     enum ParseType {
         JSON
     }
+
+    enum ProcessStatus {
+        START, TERMINATED
+    }
 }

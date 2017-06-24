@@ -20,6 +20,7 @@ public class ExecuterApp implements Symbols {
 
     private HashMap<String, Process> processMap = new HashMap<>();
     private int processCount = 0;
+    private ProcessStatusObserver processStatusObserver;
 
     /**
      * 이미 Instrumented 된 클래스들을 대상으로 시스템을 실행한다.
@@ -46,18 +47,22 @@ public class ExecuterApp implements Symbols {
 
         try {
             // 대상 시스템을 실행
-            String processKey = mainClassName + processCount;
+            String processKey = mainClassName + this.processCount;
             Process process = runProcess(processKey, processBuilder);
 
             // 대상 시스템 실행과 관련된 전역 변수들 값 변경
-            processCount++;
-            processMap.put(processKey, process);
+            this.processCount++;
+            this.processMap.put(processKey, process);
 
             // Process Key 값을 반환.
             return processKey;
         } catch (IOException e) {
             throw new TargetSystemExecutionFailedException("Executing the target system has been failed.", e);
         }
+    }
+
+    public void setProcessStatusObserver(ProcessStatusObserver observer) {
+        this.processStatusObserver = observer;
     }
 
     private ExecuterApp() {
@@ -106,7 +111,13 @@ public class ExecuterApp implements Symbols {
      * @throws IOException ProcessBuilder.start 실행 실패 시 발생.
      */
     private Process runProcess(String processKey, ProcessBuilder processBuilder) throws IOException {
+        // 서브 프로세스를 시작함.
         Process process = processBuilder.start();
+
+        // Observer를 이용해서 서브 프로세스의 시작을 알림.
+        if(this.processStatusObserver != null) {
+            this.processStatusObserver.observe(processKey, ProcessStatus.START);
+        }
 
         // 실행된 프로세스가 종료되는 것을 감지하여, 종료됬을 때 processMap으로부터 해당 프로세스를 삭제.
         Runnable deathDetector = () -> {
@@ -115,8 +126,12 @@ public class ExecuterApp implements Symbols {
                 process.waitFor();
 
                 // 해당 process 객체가 종료되면, processMap에서 제거.
-                processMap.remove(processKey);
-                System.out.println("Terminated: " + processKey);
+                this.processMap.remove(processKey);
+
+                // Observer를 이용해서 서브 프로세스의 종료를 알림.
+                if(this.processStatusObserver != null) {
+                    this.processStatusObserver.observe(processKey, ProcessStatus.TERMINATED);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -126,6 +141,27 @@ public class ExecuterApp implements Symbols {
         (new Thread(deathDetector)).start();
 
         return process;
+    }
+
+    /**
+     * Process key 값에 해당하는 서브 프로세스를 종료시킴.
+     * @param processKey 종료 시키려는 프로세스 키
+     * @throws ProcessNotExistException 프로세스 키 값에 해당하는 프로세스가 존재하지 않을 때 발생.
+     */
+    public void stopProcess(String processKey) throws ProcessNotExistException {
+        // processKey가 없으면 예외 발생.
+        if(!this.processMap.containsKey(processKey)) {
+            throw new ProcessNotExistException(processKey + " process does not exist.");
+        }
+
+        // 저장된 Process 객체를 가져옴
+        Process process = this.processMap.get(processKey);
+
+        // TODO: 종료 여부 feedback 주기.
+        process.destroy();
+
+        // 종료 후 맵에서 제거.
+        this.processMap.remove(processKey);
     }
 
     /**
