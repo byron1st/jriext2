@@ -33,7 +33,7 @@ public class TestApp {
         }
 
         try {
-            int index = Endpoint.execute(mainClassName, null, null);
+            String processKey = Endpoint.execute(mainClassName, null, null);
         } catch (RequiredFilesNotExistException | TargetSystemExecutionFailedException | LogFilesCreationFailedException e) {
             e.printStackTrace();
         }
