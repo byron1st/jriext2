@@ -1,5 +1,6 @@
-package edu.kaist.salab.byron1st.jriext2.endpoint;
+package edu.kaist.salab.byron1st.jriext2;
 
+import edu.kaist.salab.byron1st.jriext2.Endpoint;
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import edu.kaist.salab.byron1st.jriext2.inst.ClassReaderNotConstructedException;
 import edu.kaist.salab.byron1st.jriext2.inst.JRiExtLoggerClassFileCopyFailedException;

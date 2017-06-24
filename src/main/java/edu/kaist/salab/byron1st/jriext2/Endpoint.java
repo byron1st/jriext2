@@ -1,4 +1,4 @@
-package edu.kaist.salab.byron1st.jriext2.endpoint;
+package edu.kaist.salab.byron1st.jriext2;
 
 import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
