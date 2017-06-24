@@ -1,6 +1,5 @@
-package edu.kaist.salab.byron1st.jriext2.inst;
+package edu.kaist.salab.byron1st.jriext2;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

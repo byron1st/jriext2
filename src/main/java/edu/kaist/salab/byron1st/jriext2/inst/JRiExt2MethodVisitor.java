@@ -1,5 +1,6 @@
 package edu.kaist.salab.byron1st.jriext2.inst;
 
+import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;

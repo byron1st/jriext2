@@ -1,4 +1,4 @@
-package edu.kaist.salab.byron1st.jriext2.inst;
+package edu.kaist.salab.byron1st.jriext2.loggingtoolset;
 
 /**
  * Created by util on 2017. 6. 23..

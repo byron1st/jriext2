@@ -2,11 +2,10 @@ package edu.kaist.salab.byron1st.jriext2.endpoint;
 
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import edu.kaist.salab.byron1st.jriext2.inst.*;
+import edu.kaist.salab.byron1st.jriext2.loggingtoolset.ExecuterApp;
+import edu.kaist.salab.byron1st.jriext2.loggingtoolset.RequiredFilesNotExistException;
+import edu.kaist.salab.byron1st.jriext2.loggingtoolset.TargetSystemExecutionFailedException;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class TestApp {
         }
 
         try {
-            int index = ExecuterApp.getInstance().execute("framework/PFSystemMain");
+            int index = ExecuterApp.getInstance().execute("framework/PFSystemMain", null, null);
         } catch (RequiredFilesNotExistException | TargetSystemExecutionFailedException e) {
             e.printStackTrace();
         }

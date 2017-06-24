@@ -1,5 +1,6 @@
 package edu.kaist.salab.byron1st.jriext2.inst;
 
+import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.objectweb.asm.ClassReader;
