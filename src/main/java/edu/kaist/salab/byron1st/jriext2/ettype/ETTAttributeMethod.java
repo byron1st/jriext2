@@ -9,15 +9,13 @@ public class ETTAttributeMethod extends ETTAttribute {
     private String returnType;
     private boolean isVirtual;
 
-    public ETTAttributeMethod(String attributeName, boolean isVirtual, String className, String methodNameDesc) {
+    public ETTAttributeMethod(String attributeName, String className, String methodName, String methodDesc, String returnType, boolean isVirtual) {
         super(attributeName, className);
 
         this.isVirtual = isVirtual;
-        int index0 = methodNameDesc.indexOf("(");
-        int index1 = methodNameDesc.indexOf(")");
-        this.methodName = methodNameDesc.substring(0, index0);
-        this.methodDesc = methodNameDesc.substring(index0);
-        this.returnType = methodNameDesc.substring(index1 + 1);
+        this.methodName = methodName;
+        this.methodDesc = methodDesc;
+        this.returnType = returnType;
     }
 
     public String getMethodName() {

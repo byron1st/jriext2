@@ -12,7 +12,7 @@ import org.objectweb.asm.commons.AdviceAdapter;
  * Created by util on 2016. 1. 8..
  */
 class JRiExt2MethodVisitor extends AdviceAdapter implements Opcodes, Symbols {
-    private static ETTAttributeMethod getExecutionTime = new ETTAttributeMethod("time", false, "java/lang/System", "nanoTime()J");
+    private static ETTAttributeMethod getExecutionTime = new ETTAttributeMethod("time", "java/lang/System", "nanoTime", "()J", "J", false);
 
     private ETType ettype;
 

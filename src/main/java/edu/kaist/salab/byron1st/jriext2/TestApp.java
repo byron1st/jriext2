@@ -40,14 +40,13 @@ public class TestApp {
     }
 
     // Test field type with method chains and parameter type.
-    public static ETType getThreadETType() {
-        ETTAttributeMethod getClass = new ETTAttributeMethod("get-class", true, "java/lang/Object", "getClass()Ljava/lang/Class;");
-        getClass.setNextMethod(new ETTAttributeMethod("get-class-name", true, "java/lang/Class", "getName()Ljava/lang/String;"));
+    private static ETType getThreadETType() {
         ETTAttributeField targetClass = new ETTAttributeField("target-class", "target", "Ljava/lang/Runnable;");
-        targetClass.setNextMethod(getClass);
+        targetClass.setNextMethod(new ETTAttributeMethod("get-class", "java/lang/Object", "getClass", "()Ljava/lang/Class;", "Ljava/lang/Class;", true));
+        targetClass.setNextMethod(new ETTAttributeMethod("get-class-name", "java/lang/Class", "getName", "()Ljava/lang/String;", "Ljava/lang/String;", true));
 
         ETTAttributeField targetObjectId = new ETTAttributeField("target-objectId", "target", "Ljava/lang/Runnable;");
-        targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", true, "java/lang/Object", "hashCode()I"));
+        targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
 
         ETTAttributeParameter threadName = new ETTAttributeParameter("thread-name", "Ljava/lang/String;", 2);
 
@@ -62,6 +61,7 @@ public class TestApp {
                 "init",
                 "(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;JLjava/security/AccessControlContext;)V",
                 false,
+                true,
                 attributeList);
     }
 
@@ -71,6 +71,7 @@ public class TestApp {
                 "java/io/PipedInputStream",
                 "read",
                 "()I",
+                true,
                 true,
                 new ArrayList<>()
         );

@@ -12,14 +12,16 @@ public class ETType {
     private String methodName;
     private String methodDesc;
     private boolean isEnter;
+    private boolean isVirtual;
     private ArrayList<ETTAttribute> attributeList = new ArrayList<>();
 
-    public ETType(String typeName, String className, String methodName, String methodDesc, boolean isEnter, ArrayList<ETTAttribute> attributeList) {
+    public ETType(String typeName, String className, String methodName, String methodDesc, boolean isEnter, boolean isVirtual, ArrayList<ETTAttribute> attributeList) {
         this.typeName = typeName;
         this.className = className;
         this.methodName = methodName;
         this.methodDesc = methodDesc;
         this.isEnter = isEnter;
+        this.isVirtual = isVirtual;
         this.attributeList = attributeList;
     }
 
@@ -43,11 +45,15 @@ public class ETType {
         return methodDesc;
     }
 
-    public ArrayList<ETTAttribute> getAttributeList() {
-        return attributeList;
-    }
-
     public boolean isEnter() {
         return isEnter;
+    }
+
+    public boolean isVirtual() {
+        return isVirtual;
+    }
+
+    public ArrayList<ETTAttribute> getAttributeList() {
+        return attributeList;
     }
 }

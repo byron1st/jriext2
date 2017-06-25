@@ -32,11 +32,11 @@ public class InstAppTest {
     // Test field type with method chains and parameter type.
     private ETType getThreadETType() {
         ETTAttributeField targetClass = new ETTAttributeField("target-class", "target", "Ljava/lang/Runnable;");
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class", true, "java/lang/Object", "getClass()Ljava/lang/Class;"));
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class-name", true, "java/lang/Class", "getName()Ljava/lang/String;"));
+        targetClass.setNextMethod(new ETTAttributeMethod("get-class", "java/lang/Object", "getClass", "()Ljava/lang/Class;", "Ljava/lang/Class;", true));
+        targetClass.setNextMethod(new ETTAttributeMethod("get-class-name", "java/lang/Class", "getName", "()Ljava/lang/String;", "Ljava/lang/String;", true));
 
         ETTAttributeField targetObjectId = new ETTAttributeField("target-objectId", "target", "Ljava/lang/Runnable;");
-        targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", true, "java/lang/Object", "hashCode()I"));
+        targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
 
         ETTAttributeParameter threadName = new ETTAttributeParameter("thread-name", "Ljava/lang/String;", 2);
 
@@ -51,6 +51,7 @@ public class InstAppTest {
                 "init",
                 "(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;JLjava/security/AccessControlContext;)V",
                 false,
+                true,
                 attributeList);
     }
 
@@ -59,8 +60,8 @@ public class InstAppTest {
     // Return type은 반드시 method 말미에 체크.
     private ETType getSocketETType() {
         ETTAttributeReturn returnValue = new ETTAttributeReturn("return-value", "Ljava/net/SocketAddress;");
-        returnValue.setNextMethod(new ETTAttributeMethod("get-inet-socket-address", true, "java/net/InetSocketAddress", "getAddress()Ljava/net/InetAddress;"));
-        returnValue.setNextMethod(new ETTAttributeMethod("get-inet-address-string", true, "java/net/InetAddress", "toString()Ljava/lang/String;"));
+        returnValue.setNextMethod(new ETTAttributeMethod("get-inet-socket-address", "java/net/InetSocketAddress", "getAddress", "()Ljava/net/InetAddress;", "Ljava/net/InetAddress;", true));
+        returnValue.setNextMethod(new ETTAttributeMethod("get-inet-address-string", "java/net/InetAddress", "toString", "()Ljava/lang/String;", "Ljava/lang/String;", true));
 
         ArrayList<ETTAttribute> attributeList = new ArrayList<>();
         attributeList.add(returnValue);
@@ -71,6 +72,7 @@ public class InstAppTest {
                 "getLocalSocketAddress",
                 "()Ljava/net/SocketAddress;",
                 false,
+                true,
                 attributeList
         );
     }
