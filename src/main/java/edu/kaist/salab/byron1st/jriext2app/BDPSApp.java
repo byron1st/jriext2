@@ -1,5 +1,6 @@
-package edu.kaist.salab.byron1st.jriext2;
+package edu.kaist.salab.byron1st.jriext2app;
 
+import edu.kaist.salab.byron1st.jriext2.Endpoint;
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import edu.kaist.salab.byron1st.jriext2.inst.ClassReaderNotConstructedException;
 import edu.kaist.salab.byron1st.jriext2.inst.JRiExtLoggerClassFileCopyFailedException;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by util on 2017. 6. 22..
  */
-public class TestApp {
+public class BDPSApp {
     public static void main(String[] args) throws ClassReaderNotConstructedException {
         Path targetClassPath = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/bin");
 
