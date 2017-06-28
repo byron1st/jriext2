@@ -57,6 +57,13 @@ public class ETTypeBuilderImplJson implements ETTypeBuilder {
                         case KIND_RETURN:
                             attribute = new ETTAttributeReturn(attributeName, attrClassName);
                             break;
+                        case KIND_METHOD:
+                            String attrMethodName = attributeInfo.getString("methodName");
+                            String attrMethodDesc = attributeInfo.getString("methodDesc");
+                            String attrMethodReturnType = attributeInfo.getString("returnType");
+                            boolean attrIsVirtual = attributeInfo.getBoolean("isVirtual");
+                            attribute = new ETTAttributeMethod(attributeName, attrClassName, attrMethodName, attrMethodDesc, attrMethodReturnType, attrIsVirtual);
+                            break;
                     }
 
                     buildMethodChain(attributeInfo.getJSONArray("methodList"), attribute);

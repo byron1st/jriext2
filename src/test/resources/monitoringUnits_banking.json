@@ -48,5 +48,79 @@
         ]
       }
     ]
+  },
+  {
+    "typeName":"ett-write",
+    "className":"java/io/PipedOutputStream",
+    "methodName":"write",
+    "methodDesc":"([BII)V",
+    "isEnter":false,
+    "isVirtual":true,
+    "attributeList": [
+      {
+        "kind":"field",
+        "attributeName":"ett-write-sink-objectId",
+        "fieldName":"sink",
+        "className":"Ljava/io/PipedInputStream;",
+        "methodList":[
+          {
+            "attributeName":"get-sink-objectId",
+            "className":"java/lang/Object",
+            "methodName":"hashCode",
+            "methodDesc":"()I",
+            "returnType":"I",
+            "isVirtual":true
+          }
+        ]
+      },
+      {
+        "kind":"method",
+        "attributeName":"ett-write-currentThread",
+        "className":"java/lang/Thread",
+        "methodName":"currentThread",
+        "methodDesc":"()Ljava/lang/Thread;",
+        "returnType":"Ljava/lang/Thread;",
+        "isVirtual":false,
+        "methodList":[
+          {
+            "attributeName":"get-currentThread-objectId",
+            "className":"java/lang/Object",
+            "methodName":"hashCode",
+            "methodDesc":"()I",
+            "returnType":"I",
+            "isVirtual":true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "typeName":"ett-read",
+    "className":"java/io/PipedInputStream",
+    "methodName":"read",
+    "methodDesc":"()I",
+    "isEnter":false,
+    "isVirtual":true,
+    "attributeList": [
+      {
+        "kind":"method",
+        "attributeName":"ett-write-currentThread",
+        "className":"java/lang/Thread",
+        "methodName":"currentThread",
+        "methodDesc":"()Ljava/lang/Thread;",
+        "returnType":"Ljava/lang/Thread;",
+        "isVirtual":false,
+        "methodList":[
+          {
+            "attributeName":"get-currentThread-objectId",
+            "className":"java/lang/Object",
+            "methodName":"hashCode",
+            "methodDesc":"()I",
+            "returnType":"I",
+            "isVirtual":true
+          }
+        ]
+      }
+    ]
   }
 ]
