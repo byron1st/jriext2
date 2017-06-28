@@ -1,4 +1,4 @@
-package edu.kaist.salab.byron1st.jriext2app;
+package edu.kaist.salab.byron1st.jriext2app.cli;
 
 import edu.kaist.salab.byron1st.jriext2.ettype.*;
 import org.json.JSONArray;

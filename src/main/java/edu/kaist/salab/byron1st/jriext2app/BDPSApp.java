@@ -9,6 +9,7 @@ import edu.kaist.salab.byron1st.jriext2.inst.InstrumentedClassWriteFailedExcepti
 import edu.kaist.salab.byron1st.jriext2.executer.LogFilesCreationFailedException;
 import edu.kaist.salab.byron1st.jriext2.executer.RequiredFilesNotExistException;
 import edu.kaist.salab.byron1st.jriext2.executer.TargetSystemExecutionFailedException;
+import edu.kaist.salab.byron1st.jriext2app.cli.ETTypeBuilderImplJson;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

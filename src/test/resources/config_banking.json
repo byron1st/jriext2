@@ -1,0 +1,11 @@
+{
+  "classpath":"/Users/byron1st/Downloads/bdps/execute/bin",
+  "monitoringUnits":"/Users/byron1st/Downloads/bdps/monitoringUnits_banking.json",
+  "libraries":[],
+  "run":[
+    {
+      "shortcut":"main",
+      "mainClassName":"framework/PFSystemMain"
+    }
+  ]
+}

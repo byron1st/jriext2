@@ -1,13 +1,12 @@
 package edu.kaist.salab.byron1st.jriext2app;
 
 import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
+import edu.kaist.salab.byron1st.jriext2app.cli.ETTypeBuilderImplJson;
 import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by byron1st on 2017. 6. 25..
