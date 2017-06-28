@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
@@ -42,16 +43,17 @@ public class ExecuterApp implements Symbols {
             throw new RequiredFilesNotExistException("Main Class does not exist.");
         }
 
+        // 고유한 processKey를 생성
+        String processKey = getProcessKey(mainClassName, System.currentTimeMillis());
+
         // 실행을 위한 ProcessBuilder 객체를 우선 생성.
-        ProcessBuilder processBuilder = getProcessBuilder(mainClassName, outputFilePath, errorFilePath);
+        ProcessBuilder processBuilder = getProcessBuilder(processKey, mainClassName, outputFilePath, errorFilePath);
 
         try {
             // 대상 시스템을 실행
-            String processKey = mainClassName + this.processCount;
             Process process = runProcess(processKey, processBuilder);
 
-            // 대상 시스템 실행과 관련된 전역 변수들 값 변경
-            this.processCount++;
+            // 생성된 프로세스를 저장.
             this.processMap.put(processKey, process);
 
             // Process Key 값을 반환.
@@ -59,6 +61,11 @@ public class ExecuterApp implements Symbols {
         } catch (IOException e) {
             throw new TargetSystemExecutionFailedException("Executing the target system has been failed.", e);
         }
+    }
+
+    private String getProcessKey(String mainClassName, long millis) {
+        String name = mainClassName.substring(mainClassName.lastIndexOf("/"));
+        return name + millis;
     }
 
     public void setProcessStatusObserver(ProcessStatusObserver observer) {
@@ -70,13 +77,15 @@ public class ExecuterApp implements Symbols {
 
     /**
      * 실행을 위한 ProcessBuilder 객체를 생성하고 관련된 설정을 완료한 후 반환한다.
+     *
+     * @param processKey 실행할 프로세스의 고유한 Key 값.
      * @param mainClassName 실행할 main 함수가 있는 클래스 이름.
      * @param outputFilePath 실행할 프로세스의 출력값이 기록될 파일 경로.
      * @param errorFilePath 실행할 프로세스의 에러값이 기록될 파일 경로.
      * @return 생성된 ProcessBuilder 객체.
      * @throws LogFilesCreationFailedException 실행할 프로세스의 출력값, 또는 에러값이 기록될 파일들 생성에 실패할 경우 발생.
      */
-    private ProcessBuilder getProcessBuilder(String mainClassName, Path outputFilePath, Path errorFilePath) throws LogFilesCreationFailedException {
+    private ProcessBuilder getProcessBuilder(String processKey, String mainClassName, Path outputFilePath, Path errorFilePath) throws LogFilesCreationFailedException {
         // Java 프로세스 실행 커맨드를 이용하여 ProcessBuilder 클래스 생성.
         // Xbootclasspath/p:는 cache 루트의 java, javax 등과 같은 기본 클래스 파일들을 rt.jar보다 먼저 호출하도록 함.
         ProcessBuilder processBuilder = new ProcessBuilder(
@@ -87,8 +96,11 @@ public class ExecuterApp implements Symbols {
 
         try {
             // 기록을 위한 파일들 생성.
-            File outputLogFile = getLogFile(outputFilePath, DEFAULT_OUTPUT_FILE);
-            File errorLogFile = getLogFile(errorFilePath, DEFAULT_ERROR_FILE);
+            String outputFileString = processKey + ".txt";
+            String errorFileString = processKey + "_error.txt";
+
+            File outputLogFile = getLogFile(outputFilePath, Paths.get(CACHE_ROOT.toString(), outputFileString));
+            File errorLogFile = getLogFile(errorFilePath, Paths.get(CACHE_ROOT.toString(), errorFileString));
 
             // ProcessBuilder 설정 진행. 출력값 스트림과 에러값 스트림을 각각 파일객체로 redirect
             processBuilder.redirectOutput(outputLogFile);
