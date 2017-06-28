@@ -21,9 +21,14 @@ public class BDPSApp {
     public static void main(String[] args) throws ClassReaderNotConstructedException {
         Path targetClassPath = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/bin");
 
-        ArrayList<ETType> ettypeList = new ArrayList<>();
-        ettypeList.add(getThreadETType());
-        ettypeList.add(getPipedStreamETType());
+//        ArrayList<ETType> ettypeList = new ArrayList<>();
+//        ettypeList.add(getThreadETType());
+//        ettypeList.add(getPipedInputStreamETType());
+//        ettypeList.add(getPipedOutputStreamETType());
+
+        Path path = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/monitoringUnits_banking.json");
+        ETTypeBuilderImplJson builder = new ETTypeBuilderImplJson();
+        ArrayList<ETType> ettypeList = builder.buildETTypeList(path);
 
         String mainClassName = "framework/PFSystemMain";
 
@@ -43,8 +48,10 @@ public class BDPSApp {
     // Test field type with method chains and parameter type.
     private static ETType getThreadETType() {
         ETTAttributeField targetClass = new ETTAttributeField("target-class", "target", "Ljava/lang/Runnable;");
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class", "java/lang/Object", "getClass", "()Ljava/lang/Class;", "Ljava/lang/Class;", true));
-        targetClass.setNextMethod(new ETTAttributeMethod("get-class-name", "java/lang/Class", "getName", "()Ljava/lang/String;", "Ljava/lang/String;", true));
+        ETTAttributeMethod getClassMethod = new ETTAttributeMethod("get-class", "java/lang/Object", "getClass", "()Ljava/lang/Class;", "Ljava/lang/Class;", true);
+        ETTAttributeMethod getClassNameMethod = new ETTAttributeMethod("get-class-name", "java/lang/Class", "getName", "()Ljava/lang/String;", "Ljava/lang/String;", true);
+        targetClass.setNextMethod(getClassMethod);
+        getClassMethod.setNextMethod(getClassNameMethod);
 
         ETTAttributeField targetObjectId = new ETTAttributeField("target-objectId", "target", "Ljava/lang/Runnable;");
         targetObjectId.setNextMethod(new ETTAttributeMethod("get-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
@@ -66,15 +73,43 @@ public class BDPSApp {
                 attributeList);
     }
 
-    public static ETType getPipedStreamETType() {
+    public static ETType getPipedOutputStreamETType() {
+        ETTAttributeField sinkObjectId = new ETTAttributeField("sink-objectId", "sink", "Ljava/io/PipedInputStream;");
+        sinkObjectId.setNextMethod(new ETTAttributeMethod("get-sink-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
+
+        ETTAttributeMethod threadId = new ETTAttributeMethod("get-current-thread", "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", "Ljava/lang/Thread;", false);
+        threadId.setNextMethod(new ETTAttributeMethod("get-current-thread-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
+
+        ArrayList<ETTAttribute> attributeList = new ArrayList<>();
+        attributeList.add(sinkObjectId);
+        attributeList.add(threadId);
+
+        return new ETType(
+                "ett-write",
+                "java/io/PipedOutputStream",
+                "write",
+                "([BII)V",
+                false,
+                true,
+                attributeList
+        );
+    }
+
+    public static ETType getPipedInputStreamETType() {
+        ETTAttributeMethod threadId = new ETTAttributeMethod("get-current-thread", "java/lang/Thread", "currentThread", "()Ljava/lang/Thread;", "Ljava/lang/Thread;", false);
+        threadId.setNextMethod(new ETTAttributeMethod("get-current-thread-object-id", "java/lang/Object", "hashCode", "()I", "I", true));
+
+        ArrayList<ETTAttribute> attributeList = new ArrayList<>();
+        attributeList.add(threadId);
+
         return new ETType(
                 "ett-read",
                 "java/io/PipedInputStream",
                 "read",
                 "()I",
+                false,
                 true,
-                true,
-                new ArrayList<>()
+                attributeList
         );
     }
 }
