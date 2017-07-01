@@ -61,3 +61,6 @@ fabric.properties
 
 # Testing results
 jriext_userdata/
+
+# macOS file
+.DS_Store
