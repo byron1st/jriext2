@@ -19,6 +19,13 @@ import java.util.Scanner;
 public class CLIApp {
     public static final String KEY_ERROR = "error";
     public static final String KEY_DONE = "done";
+    public static final String MESSAGE_INST = "inst";
+    public static final String MESSAGE_EXEC = "exec";
+    public static final String MESSAGE_QUIT = "quit";
+    public static final String CMD_QUIT = "cmd.quit";
+    public static final String CMD_INST = "cmd.inst";
+    public static final String CMD_EXEC = "cmd.exec";
+    public static final String CMD_STOP = "cmd.stop";
 
     public static void main(String[] args) {
         /**
@@ -35,18 +42,18 @@ public class CLIApp {
                 JSONObject commandObject = new JSONObject(in.nextLine());
                 String command = commandObject.getString("cmd");
                 switch (command) {
-                    case "quit":
-                        send(KEY_DONE, "Quitting JRiExt2.");
+                    case CMD_QUIT:
+                        send(KEY_DONE, MESSAGE_QUIT);
                         break label;
-                    case "inst":
+                    case CMD_INST:
                         instrument(commandObject.getJSONArray("args"));
-                        send(KEY_DONE, "Instrumentation has been completed.");
+                        send(KEY_DONE, MESSAGE_INST);
                         break;
-                    case "execute":
+                    case CMD_EXEC:
                         execute(commandObject.getJSONArray("args"));
-                        send(KEY_DONE, "The target program has been executed.");
+                        send(KEY_DONE, MESSAGE_EXEC);
                         break;
-                    case "stop":
+                    case CMD_STOP:
                         break;
                 }
             } catch (JRiExtLoggerClassFileCopyFailedException | WrongArgumentsException | NotInstClassesCopyFailedException | InstrumentedClassWriteFailedException | ClassReaderNotConstructedException | JSONException e) {
@@ -57,12 +64,15 @@ public class CLIApp {
 
     private static void instrument(JSONArray args) throws JRiExtLoggerClassFileCopyFailedException, ClassReaderNotConstructedException, InstrumentedClassWriteFailedException, NotInstClassesCopyFailedException, WrongArgumentsException {
         Path targetClassPath;
-        Path ettypeDefFilePath;
+//        Path ettypeDefFilePath;
+        JSONArray ettypeInfoList;
         try {
             targetClassPath = Paths.get(args.getString(0));
-            ettypeDefFilePath = Paths.get(args.getString(1));
+//            ettypeDefFilePath = Paths.get(args.getString(1));
+            ettypeInfoList = args.getJSONArray(1);
 
-            ArrayList<ETType> ettypeList = (new ETTypeBuilderImplJson()).buildETTypeList(ettypeDefFilePath);
+//            ArrayList<ETType> ettypeList = (new ETTypeBuilderImplJson()).buildETTypeList(ettypeDefFilePath);
+            ArrayList<ETType> ettypeList = (new ETTypeBuilderImplJson()).buildETTypeList(ettypeInfoList);
             InstApp.getInstance().instrument(targetClassPath, ettypeList);
         } catch (ArrayIndexOutOfBoundsException | InvalidPathException e) {
             throw new WrongArgumentsException("Arguments are wrong.", e);

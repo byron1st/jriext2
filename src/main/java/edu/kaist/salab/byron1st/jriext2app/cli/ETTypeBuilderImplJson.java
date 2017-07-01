@@ -25,57 +25,65 @@ public class ETTypeBuilderImplJson implements ETTypeBuilder {
         try {
             String jsonString = new String(Files.readAllBytes(storedFile), StandardCharsets.UTF_8);
             JSONArray ettypeInfoList = new JSONArray(jsonString);
-            for (Object ettypeInfoObject : ettypeInfoList) {
-                JSONObject ettypeInfo = (JSONObject) ettypeInfoObject;
-
-                String typeName = ettypeInfo.getString("typeName");
-                String className = ettypeInfo.getString("className");
-                String methodName = ettypeInfo.getString("methodName");
-                String methodDesc = ettypeInfo.getString("methodDesc");
-                boolean isVirtual = ettypeInfo.getBoolean("isVirtual");
-                boolean isEnter = ettypeInfo.getBoolean("isEnter");
-
-                ArrayList<ETTAttribute> attributeList = new ArrayList<>();
-                JSONArray attributeListInfo = ettypeInfo.getJSONArray("attributeList");
-                for (Object attributeInfoObject : attributeListInfo) {
-                    ETTAttribute attribute = null;
-                    JSONObject attributeInfo = (JSONObject) attributeInfoObject;
-
-                    String attributeName = attributeInfo.getString("attributeName");
-                    String attrClassName = attributeInfo.getString("className");
-
-                    String kind = attributeInfo.getString("kind");
-                    switch (kind) {
-                        case KIND_FIELD:
-                            String fieldName = attributeInfo.getString("fieldName");
-                            attribute = new ETTAttributeField(attributeName, fieldName, attrClassName);
-                            break;
-                        case KIND_PARAMETER:
-                            int index = attributeInfo.getInt("index");
-                            attribute = new ETTAttributeParameter(attributeName, attrClassName, index);
-                            break;
-                        case KIND_RETURN:
-                            attribute = new ETTAttributeReturn(attributeName, attrClassName);
-                            break;
-                        case KIND_METHOD:
-                            String attrMethodName = attributeInfo.getString("methodName");
-                            String attrMethodDesc = attributeInfo.getString("methodDesc");
-                            String attrMethodReturnType = attributeInfo.getString("returnType");
-                            boolean attrIsVirtual = attributeInfo.getBoolean("isVirtual");
-                            attribute = new ETTAttributeMethod(attributeName, attrClassName, attrMethodName, attrMethodDesc, attrMethodReturnType, attrIsVirtual);
-                            break;
-                    }
-
-                    buildMethodChain(attributeInfo.getJSONArray("methodList"), attribute);
-
-                    attributeList.add(attribute);
-                }
-
-                ETType ettype = new ETType(typeName, className, methodName, methodDesc, isEnter, isVirtual, attributeList);
-                ettypeList.add(ettype);
-            }
+            buildETTypeList(ettypeInfoList);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        return ettypeList;
+    }
+
+    public ArrayList<ETType> buildETTypeList(JSONArray ettypeInfoList) {
+        ArrayList<ETType> ettypeList = new ArrayList<>();
+
+        for (Object ettypeInfoObject : ettypeInfoList) {
+            JSONObject ettypeInfo = (JSONObject) ettypeInfoObject;
+
+            String typeName = ettypeInfo.getString("typeName");
+            String className = ettypeInfo.getString("className");
+            String methodName = ettypeInfo.getString("methodName");
+            String methodDesc = ettypeInfo.getString("methodDesc");
+            boolean isVirtual = ettypeInfo.getBoolean("isVirtual");
+            boolean isEnter = ettypeInfo.getBoolean("isEnter");
+
+            ArrayList<ETTAttribute> attributeList = new ArrayList<>();
+            JSONArray attributeListInfo = ettypeInfo.getJSONArray("attributeList");
+            for (Object attributeInfoObject : attributeListInfo) {
+                ETTAttribute attribute = null;
+                JSONObject attributeInfo = (JSONObject) attributeInfoObject;
+
+                String attributeName = attributeInfo.getString("attributeName");
+                String attrClassName = attributeInfo.getString("className");
+
+                String kind = attributeInfo.getString("kind");
+                switch (kind) {
+                    case KIND_FIELD:
+                        String fieldName = attributeInfo.getString("fieldName");
+                        attribute = new ETTAttributeField(attributeName, fieldName, attrClassName);
+                        break;
+                    case KIND_PARAMETER:
+                        int index = attributeInfo.getInt("index");
+                        attribute = new ETTAttributeParameter(attributeName, attrClassName, index);
+                        break;
+                    case KIND_RETURN:
+                        attribute = new ETTAttributeReturn(attributeName, attrClassName);
+                        break;
+                    case KIND_METHOD:
+                        String attrMethodName = attributeInfo.getString("methodName");
+                        String attrMethodDesc = attributeInfo.getString("methodDesc");
+                        String attrMethodReturnType = attributeInfo.getString("returnType");
+                        boolean attrIsVirtual = attributeInfo.getBoolean("isVirtual");
+                        attribute = new ETTAttributeMethod(attributeName, attrClassName, attrMethodName, attrMethodDesc, attrMethodReturnType, attrIsVirtual);
+                        break;
+                }
+
+                buildMethodChain(attributeInfo.getJSONArray("methodList"), attribute);
+
+                attributeList.add(attribute);
+            }
+
+            ETType ettype = new ETType(typeName, className, methodName, methodDesc, isEnter, isVirtual, attributeList);
+            ettypeList.add(ettype);
         }
 
         return ettypeList;

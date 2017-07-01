@@ -14,7 +14,7 @@ public interface Symbols {
 
     Path CACHE_ROOT = Paths.get(System.getProperty("user.dir"),"jriext_userdata", "cache");
     // 임시값.
-    Path JRIEXTLOGGER_PATH = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/build/classes/main/java/util/JRiExtLogger.class");
+    Path JRIEXTLOGGER_PATH = Paths.get("/Users/byron1st/Developer/Workspace/Java/jriext2/build/classes/main/java/util/JRiExtLogger.class");
 //    Path DEFAULT_OUTPUT_FILE = CACHE_ROOT.resolve("output.txt");
 //    Path DEFAULT_ERROR_FILE = CACHE_ROOT.resolve("error.txt");
 
