@@ -111,7 +111,7 @@ public class CLIApp {
 
             ArrayList<ETType> ettypeList = (new ETTypeBuilderImplJson()).buildETTypeList(ettypeInfoList);
             Endpoint.instrument(targetClassPath, ettypeList);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | JSONException e) {
             throw new WrongArgumentsException("Arguments are wrong.", e);
         } catch (InvalidPathException e) {
             throw new WrongArgumentsException("Classpath is wrong.", e);
