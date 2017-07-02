@@ -45,8 +45,14 @@ public class CLIApp {
     }
 
     public static void main(String[] args) {
+        // ProcessKey로 나중에 UniqueName을 찾아야 한다. UniqueName은 JRiExt2ManagerApp에서 사용하는 키값.
         HashMap<String, String> mapProcessKeyToUniqueName = new HashMap<>();
+
+        // ProcessObserver를 통해 sub-process의 종료를 감지해서 JRiExt2ManagerApp으로 메세지를 보내줘야 함.
+        // mapProcessKeyToUniqueName을 넣어주어서, JRiExt2ManagerApp으로 UniqueName 값도 같이 보내주어야 함.
         ProcessObserver observer = new ProcessObserver(mapProcessKeyToUniqueName);
+        // Endpoint를 통해 접근하는 ExecuterApp은 Singleton 패턴으로 생성되기 때문에,
+        // 미리 Observer를 지정해주어도 괜찮다.
         Endpoint.setProcessStatusObserver(observer);
         /**
          * command:
@@ -57,8 +63,13 @@ public class CLIApp {
          */
         label:
         while (true) {
+            // 데몬 프로세스임.
             try {
+                // 표준 input stream(System.in)을 사용함.
                 Scanner in = new Scanner(System.in);
+
+                // input은 무조건 JSON 형태로 오는 것을 가정함.
+                // JSON으로 안 오면, JSONException 발생하고, 아래에서 캐치되서 ERROR 메세지 보냄.
                 JSONObject commandObject = new JSONObject(in.nextLine());
                 String command = commandObject.getString("cmd");
                 switch (command) {
@@ -71,8 +82,14 @@ public class CLIApp {
                         break;
                     case CMD_EXEC:
                         JSONArray execargs = commandObject.getJSONArray("args");
+
+                        // UniqueName은 미리 식별해둠.
                         String uniqueName = execargs.getString(1);
+
+                        // 실행하면, ProcessKey를 반환받음.
                         String processKey = execute(execargs);
+
+                        // 나중을 위해 mapProcessKeyToUniqueName에 추가해둠.
                         mapProcessKeyToUniqueName.put(processKey, uniqueName);
                         send(KEY_DONE_EXEC, uniqueName, processKey);
                         break;
@@ -106,7 +123,7 @@ public class CLIApp {
         Path outputPath = null;
         try {
             if(!args.isNull(2)) {
-                outputPath = Paths.get(args.getString(1));
+                outputPath = Paths.get(args.getString(2));
             }
         } catch (InvalidPathException e) {
             throw new WrongArgumentsException("Output paths are wrong.", e);

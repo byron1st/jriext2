@@ -20,7 +20,6 @@ public class ExecuterApp implements Symbols {
     }
 
     private HashMap<String, Process> processMap = new HashMap<>();
-    private int processCount = 0;
     private ProcessStatusObserver processStatusObserver;
 
     /**
@@ -129,9 +128,7 @@ public class ExecuterApp implements Symbols {
         Process process = processBuilder.start();
 
         // Observer를 이용해서 서브 프로세스의 시작을 알림.
-        if(this.processStatusObserver != null) {
-            this.processStatusObserver.observe(processKey, ProcessStatus.START);
-        }
+        observe(processKey, ProcessStatus.START);
 
         // 실행된 프로세스가 종료되는 것을 감지하여, 종료됬을 때 processMap으로부터 해당 프로세스를 삭제.
         Runnable deathDetector = () -> {
@@ -143,9 +140,7 @@ public class ExecuterApp implements Symbols {
                 this.processMap.remove(processKey);
 
                 // Observer를 이용해서 서브 프로세스의 종료를 알림.
-                if(this.processStatusObserver != null) {
-                    this.processStatusObserver.observe(processKey, ProcessStatus.TERMINATED);
-                }
+                observe(processKey, ProcessStatus.TERMINATED);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -190,6 +185,12 @@ public class ExecuterApp implements Symbols {
             return Files.createFile(Paths.get(CACHE_ROOT.toString(), filePath)).toFile();
         } else {
             return Files.createFile(Paths.get(rootPath, filePath)).toFile();
+        }
+    }
+
+    private void observe(String processKey, ProcessStatus status) {
+        if(this.processStatusObserver != null) {
+            this.processStatusObserver.observe(processKey, status);
         }
     }
 }
