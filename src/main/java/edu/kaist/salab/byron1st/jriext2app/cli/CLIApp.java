@@ -103,20 +103,15 @@ public class CLIApp {
 
     private static String execute(JSONArray args) throws RequiredFilesNotExistException, LogFilesCreationFailedException, TargetSystemExecutionFailedException, WrongArgumentsException {
         String mainClassName = args.getString(0);
-        Path outputFilePath = null;
-        Path errorFilePath = null;
+        Path outputPath = null;
         try {
             if(!args.isNull(2)) {
-                outputFilePath = Paths.get(args.getString(1));
-            }
-
-            if(!args.isNull(3)) {
-                errorFilePath = Paths.get(args.getString(2));
+                outputPath = Paths.get(args.getString(1));
             }
         } catch (InvalidPathException e) {
             throw new WrongArgumentsException("Output paths are wrong.", e);
         }
 
-        return Endpoint.execute(mainClassName, outputFilePath, errorFilePath);
+        return Endpoint.execute(mainClassName, outputPath);
     }
 }

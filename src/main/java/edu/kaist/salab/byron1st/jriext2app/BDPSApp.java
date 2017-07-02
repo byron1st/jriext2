@@ -40,7 +40,7 @@ public class BDPSApp {
         }
 
         try {
-            String processKey = Endpoint.execute(mainClassName, null, null);
+            String processKey = Endpoint.execute(mainClassName, null);
         } catch (RequiredFilesNotExistException | TargetSystemExecutionFailedException | LogFilesCreationFailedException e) {
             e.printStackTrace();
         }

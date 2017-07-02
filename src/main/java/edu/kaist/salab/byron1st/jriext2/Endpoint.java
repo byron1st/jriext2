@@ -16,8 +16,8 @@ public class Endpoint implements Symbols {
         InstApp.getInstance().instrument(targetClassPath, ettypeList);
     }
 
-    public static String execute(String mainClassName, Path outputFilePath, Path errorFilePath) throws TargetSystemExecutionFailedException, RequiredFilesNotExistException, LogFilesCreationFailedException {
-        return ExecuterApp.getInstance().execute(mainClassName, outputFilePath, errorFilePath);
+    public static String execute(String mainClassName, Path outputFilePath) throws TargetSystemExecutionFailedException, RequiredFilesNotExistException, LogFilesCreationFailedException {
+        return ExecuterApp.getInstance().execute(mainClassName, outputFilePath);
     }
 
     public static void stop(String processKey) throws ProcessNotExistException {
