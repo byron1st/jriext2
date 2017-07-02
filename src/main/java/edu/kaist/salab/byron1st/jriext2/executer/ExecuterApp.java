@@ -100,8 +100,8 @@ public class ExecuterApp implements Symbols {
             String outputFileString = processKey + ".txt";
             String errorFileString = processKey + "_error.txt";
 
-            File outputLogFile = getLogFile(outputPath.toString(), outputFileString);
-            File errorLogFile = getLogFile(outputPath.toString(), errorFileString);
+            File outputLogFile = getLogFile(outputPath, outputFileString);
+            File errorLogFile = getLogFile(outputPath, errorFileString);
 
             // ProcessBuilder 설정 진행. 출력값 스트림과 에러값 스트림을 각각 파일객체로 redirect
             processBuilder.redirectOutput(outputLogFile);
@@ -180,11 +180,11 @@ public class ExecuterApp implements Symbols {
      * @return 생성된 파일 객체
      * @throws IOException Files.createFile 함수가 실패할 경우 발생.
      */
-    private File getLogFile(String rootPath, String filePath) throws IOException {
+    private File getLogFile(Path rootPath, String filePath) throws IOException {
         if(rootPath == null) {
-            return Files.createFile(Paths.get(CACHE_ROOT.toString(), filePath)).toFile();
+            return Files.createFile(CACHE_ROOT.resolve(filePath)).toFile();
         } else {
-            return Files.createFile(Paths.get(rootPath, filePath)).toFile();
+            return Files.createFile(rootPath.resolve(filePath)).toFile();
         }
     }
 
