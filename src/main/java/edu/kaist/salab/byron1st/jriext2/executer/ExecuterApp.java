@@ -64,7 +64,7 @@ public class ExecuterApp implements Symbols {
     }
 
     private String getProcessKey(String mainClassName, long millis) {
-        String name = mainClassName.substring(mainClassName.lastIndexOf("/"));
+        String name = mainClassName.substring(mainClassName.lastIndexOf("/") + 1);
         return name + millis;
     }
 
