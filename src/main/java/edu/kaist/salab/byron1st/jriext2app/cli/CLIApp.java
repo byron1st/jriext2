@@ -3,6 +3,7 @@ package edu.kaist.salab.byron1st.jriext2app.cli;
 import edu.kaist.salab.byron1st.jriext2.Endpoint;
 import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
 import edu.kaist.salab.byron1st.jriext2.executer.LogFilesCreationFailedException;
+import edu.kaist.salab.byron1st.jriext2.executer.ProcessNotExistException;
 import edu.kaist.salab.byron1st.jriext2.executer.RequiredFilesNotExistException;
 import edu.kaist.salab.byron1st.jriext2.executer.TargetSystemExecutionFailedException;
 import edu.kaist.salab.byron1st.jriext2.inst.ClassReaderNotConstructedException;
@@ -94,9 +95,10 @@ public class CLIApp {
                         send(KEY_DONE_EXEC, uniqueName, processKey);
                         break;
                     case CMD_STOP:
+                        stop(commandObject.getJSONArray("args"));
                         break;
                 }
-            } catch (JRiExtLoggerClassFileCopyFailedException | WrongArgumentsException | NotInstClassesCopyFailedException | InstrumentedClassWriteFailedException | ClassReaderNotConstructedException | JSONException | RequiredFilesNotExistException | LogFilesCreationFailedException | TargetSystemExecutionFailedException e) {
+            } catch (JRiExtLoggerClassFileCopyFailedException | WrongArgumentsException | NotInstClassesCopyFailedException | InstrumentedClassWriteFailedException | ClassReaderNotConstructedException | JSONException | RequiredFilesNotExistException | LogFilesCreationFailedException | TargetSystemExecutionFailedException | ProcessNotExistException e) {
                 send(KEY_ERROR, e.getMessage());
             }
         }
@@ -130,5 +132,10 @@ public class CLIApp {
         }
 
         return Endpoint.execute(mainClassName, outputPath);
+    }
+
+    private static void stop(JSONArray args) throws ProcessNotExistException {
+        String processKey = args.getString(0);
+        Endpoint.stop(processKey);
     }
 }
