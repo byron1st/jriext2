@@ -25,7 +25,7 @@ public class ETTypeBuilderImplJson implements ETTypeBuilder {
         try {
             String jsonString = new String(Files.readAllBytes(storedFile), StandardCharsets.UTF_8);
             JSONArray ettypeInfoList = new JSONArray(jsonString);
-            buildETTypeList(ettypeInfoList);
+            ettypeList = buildETTypeList(ettypeInfoList);
         } catch (IOException e) {
             e.printStackTrace();
         }

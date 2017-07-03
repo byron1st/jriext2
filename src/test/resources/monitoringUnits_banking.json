@@ -3,7 +3,7 @@
     "typeName":"ett-thread",
     "className":"java/lang/Thread",
     "methodName":"init",
-    "methodDesc":"(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;JLjava/security/AccessControlContext;)V",
+    "methodDesc":"(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;JLjava/security/AccessControlContext;Z)V",
     "isVirtual":true,
     "isEnter":false,
     "attributeList":[

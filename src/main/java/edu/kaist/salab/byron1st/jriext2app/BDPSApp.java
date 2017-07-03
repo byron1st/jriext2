@@ -20,14 +20,14 @@ import java.util.ArrayList;
  */
 public class BDPSApp {
     public static void main(String[] args) throws ClassReaderNotConstructedException {
-        Path targetClassPath = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/bin");
+        Path targetClassPath = Paths.get("/Users/byron1st/Developer/Workspace/Java/jriext2/src/test/resources/bin");
 
 //        ArrayList<ETType> ettypeList = new ArrayList<>();
 //        ettypeList.add(getThreadETType());
 //        ettypeList.add(getPipedInputStreamETType());
 //        ettypeList.add(getPipedOutputStreamETType());
 
-        Path path = Paths.get("/Users/byron1st/Developer/Workspace/IntelliJ/jriext2/src/test/resources/monitoringUnits_banking.json");
+        Path path = Paths.get("/Users/byron1st/Developer/Workspace/Java/jriext2/src/test/resources/monitoringUnits_banking.json");
         ETTypeBuilderImplJson builder = new ETTypeBuilderImplJson();
         ArrayList<ETType> ettypeList = builder.buildETTypeList(path);
 
