@@ -41,7 +41,7 @@ public class ExecuterApp implements Symbols {
             throw new RequiredFilesNotExistException("Main Class does not exist.");
         }
 
-        if (outputPath != null && Files.isDirectory(outputPath)) {
+        if (outputPath != null && !Files.isDirectory(outputPath)) {
             throw new RequiredFilesNotExistException("Output path is not a directory.");
         }
 
