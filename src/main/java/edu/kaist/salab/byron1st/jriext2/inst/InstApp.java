@@ -65,6 +65,9 @@ public class InstApp implements Symbols {
      * @throws NotInstClassesCopyFailedException targetClassPath의 클래스 파일들을 캐시 폴더로 복사하는데 실패함
      */
     public void instrument(Path targetClassPath, ArrayList<ETType> ettypeList) throws ClassReaderNotConstructedException, InstrumentedClassWriteFailedException, NotInstClassesCopyFailedException, JRiExtLoggerClassFileCopyFailedException {
+        // instrument를 수행할 때마다 캐시 폴더를 지우고 새로한다.
+        deleteCacheFolderIfExists();
+
         // Instrument가 먼저 진행되기 때문에,
         // instrument 된 클래스는 이미 캐시 폴더에 print 되어 있다.
         // 이때, targetClassPath의 클래스들을 그대로 복사하면
@@ -116,7 +119,6 @@ public class InstApp implements Symbols {
      * 생성자 클래스. 캐시 폴더가 있다면, 캐시 폴더를 삭제한다.
      */
     private InstApp() {
-        deleteCacheFolderIfExists();
     }
 
     /**

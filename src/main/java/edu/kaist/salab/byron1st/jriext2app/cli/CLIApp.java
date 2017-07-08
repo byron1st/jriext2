@@ -1,6 +1,7 @@
 package edu.kaist.salab.byron1st.jriext2app.cli;
 
 import edu.kaist.salab.byron1st.jriext2.Endpoint;
+import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.ettype.ETType;
 import edu.kaist.salab.byron1st.jriext2.executer.LogFilesCreationFailedException;
 import edu.kaist.salab.byron1st.jriext2.executer.ProcessNotExistException;
@@ -24,7 +25,7 @@ import java.util.Scanner;
 /**
  * Created by byron1st on 2017. 6. 28..
  */
-public class CLIApp {
+public class CLIApp implements Symbols {
     public static final String KEY_ERROR = "error";
     public static final String KEY_DONE_INST = "done.inst";
     public static final String KEY_DONE_EXEC = "done.exec";
@@ -79,7 +80,7 @@ public class CLIApp {
                         break label;
                     case CMD_INST:
                         instrument(commandObject.getJSONArray("args"));
-                        send(KEY_DONE_INST, null);
+                        send(KEY_DONE_INST, CACHE_ROOT.toString());
                         break;
                     case CMD_EXEC:
                         JSONArray execargs = commandObject.getJSONArray("args");
