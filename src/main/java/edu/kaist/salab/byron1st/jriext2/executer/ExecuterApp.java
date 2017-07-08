@@ -97,8 +97,8 @@ public class ExecuterApp implements Symbols {
 
         try {
             // 기록을 위한 파일들 생성.
-            String outputFileString = processKey + ".txt";
-            String errorFileString = processKey + "_error.txt";
+            String outputFileString = getOutputFileName(processKey);
+            String errorFileString =  getErrorFileName(processKey);
 
             File outputLogFile = getLogFile(outputPath, outputFileString);
             File errorLogFile = getLogFile(outputPath, errorFileString);

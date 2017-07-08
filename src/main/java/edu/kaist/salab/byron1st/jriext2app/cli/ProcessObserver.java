@@ -3,6 +3,7 @@ package edu.kaist.salab.byron1st.jriext2app.cli;
 import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.executer.ProcessStatusObserver;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
@@ -23,7 +24,8 @@ public class ProcessObserver implements ProcessStatusObserver, Symbols {
         // => 쓸데없이 여기에 시간 쓰지 말것.
         if(processStatus == ProcessStatus.TERMINATED) {
             String uniqueName = mapProcessKeyToUniqueName.get(processKey);
-            CLIApp.send(CLIApp.KEY_TERM_EXEC, uniqueName, processKey);
+            String outputFileName = getOutputFileName(processKey);
+            CLIApp.send(CLIApp.KEY_TERM_EXEC, uniqueName, outputFileName);
         }
     }
 }

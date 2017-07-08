@@ -25,4 +25,12 @@ public interface Symbols {
     enum ProcessStatus {
         START, TERMINATED
     }
+
+    default String getOutputFileName(String processKey) {
+        return processKey + ".txt";
+    }
+
+    default String getErrorFileName(String processKey) {
+        return processKey + "_error.txt";
+    }
 }
