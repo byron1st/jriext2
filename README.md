@@ -3,6 +3,12 @@
 
 This is the next version of the original [JRiExt](https://github.com/byron1st/jriext).
 
+This program is built upon:
+* [ASM 5](http://asm.ow2.org)
+* [Apache Commons Lang 3](https://commons.apache.org/lang/)
+* [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
+* [org.json](https://github.com/byron1st/jriext2)
+
 ## Purpose
 이 프로그램은 <u>특정 메소드</u>가 실행 되었을 때, 다음 정보들을 로깅하기 위해 제작되었습니다.
  * 실행된 메소드의 파라미터 값
