@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
@@ -63,11 +62,6 @@ public class ExecuterApp implements Symbols {
         } catch (IOException e) {
             throw new TargetSystemExecutionFailedException("Executing the target system has been failed.", e);
         }
-    }
-
-    private String getProcessKey(String mainClassName, long millis) {
-        String name = mainClassName.substring(mainClassName.lastIndexOf("/") + 1);
-        return name + millis;
     }
 
     public void setProcessStatusObserver(ProcessStatusObserver observer) {
@@ -165,8 +159,6 @@ public class ExecuterApp implements Symbols {
 
         // 저장된 Process 객체를 가져옴
         Process process = this.processMap.get(processKey);
-
-        // TODO: 종료 여부 feedback 주기.
         process.destroy();
 
         // 종료 후 맵에서 제거.
@@ -186,6 +178,11 @@ public class ExecuterApp implements Symbols {
         } else {
             return Files.createFile(rootPath.resolve(filePath)).toFile();
         }
+    }
+
+    private String getProcessKey(String mainClassName, long millis) {
+        String name = mainClassName.substring(mainClassName.lastIndexOf("/") + 1);
+        return name + millis;
     }
 
     private void observe(String processKey, ProcessStatus status) {

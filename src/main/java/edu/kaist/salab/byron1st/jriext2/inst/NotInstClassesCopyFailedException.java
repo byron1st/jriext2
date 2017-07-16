@@ -1,7 +1,5 @@
 package edu.kaist.salab.byron1st.jriext2.inst;
 
-import java.io.IOException;
-
 /**
  * Created by util on 2017. 6. 20..
  */

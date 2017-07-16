@@ -1,7 +1,6 @@
 package edu.kaist.salab.byron1st.jriext2.ettype;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by util on 2017. 6. 20..

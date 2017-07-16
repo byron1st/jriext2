@@ -13,13 +13,12 @@ import java.util.ArrayList;
 /**
  * Created by byron1st on 2017. 6. 25..
  */
-public class ETTypeBuilderImplJson implements ETTypeBuilder {
+public class ETTypeBuilderImplJson {
     public static final String KIND_FIELD = "field";
     public static final String KIND_METHOD = "method";
     public static final String KIND_PARAMETER = "parameter";
     public static final String KIND_RETURN = "return";
 
-    @Override
     public ArrayList<ETType> buildETTypeList(Path storedFile) {
         ArrayList<ETType> ettypeList = new ArrayList<>();
         try {

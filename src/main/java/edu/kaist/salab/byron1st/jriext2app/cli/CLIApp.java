@@ -56,12 +56,12 @@ public class CLIApp implements Symbols {
         // Endpoint를 통해 접근하는 ExecuterApp은 Singleton 패턴으로 생성되기 때문에,
         // 미리 Observer를 지정해주어도 괜찮다.
         Endpoint.setProcessStatusObserver(observer);
-        /**
-         * command:
-         * {
-         *  cmd: "inst",
-         *  args: ["","",""]
-         * }
+        /*
+          command:
+          {
+           cmd: "inst",
+           args: ["","",""]
+          }
          */
         label:
         while (true) {

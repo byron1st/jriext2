@@ -3,7 +3,6 @@ package edu.kaist.salab.byron1st.jriext2app.cli;
 import edu.kaist.salab.byron1st.jriext2.Symbols;
 import edu.kaist.salab.byron1st.jriext2.executer.ProcessStatusObserver;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 /**
